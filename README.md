@@ -1,2 +1,1 @@
-# dj_goods
-Dj_goods
+# Изучаю Django
