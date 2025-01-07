@@ -15,7 +15,7 @@ def index(request):
     # t = render_to_string('women/index.html')
     # return HttpResponse(t)
     data = {
-        'title': 'Главная ',
+        'title': 'главная ',
           'menu': menu,
           'float': 28.56,
           'lst': [1, 2, 'abc', True],

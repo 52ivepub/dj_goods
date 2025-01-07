@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ title|upper }}</title>
 </head>
 <body>
 {% for item in menu %}
 {{item}} <br>
 {% endfor %}
-<p>{{ float }}</p>
-<p>{{ lst }}</p>
+<p>{{ float|divisibleby:"2" }}</p>
+<p>{{ lst|first }}</p>
 <p>{{ dict }}</p>
 <p>{{ obj }}</p>
 <p>{{ set }}</p>
+<p>{{ menu|join:' | ' }}</p>
 
 
 <h1>{{ title }}</h1>
