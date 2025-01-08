@@ -6,9 +6,23 @@
     <title>{{ title|upper }}</title>
 </head>
 <body>
+<ul>
+<li><a href="{% url 'home' %}"> Главная страница</a></li>
+{% for m in menu %}
+
+{% if not forloop.last %}
+<li>
+{% else %} <li class='last'>
+{% endif %}
+<a href="{% url m.url_name %}">{{ m.title }}</a>
+</li>
+{% endfor %}
+</ul>
+
+
 {% for item in posts %}
 <ul>
-<li >{{item}} 
+<li >{{item.name}} 
 
 <p><a href="{% url 'post' item.id %}">Читать пост</a></p>
 {% if not forloop.last  %}
@@ -17,15 +31,10 @@
 </li>
 </ul>
 {% endfor %}
-<p>{{ float|divisibleby:"2" }}</p>
-<p>{{ lst|first }}</p>
-<p>{{ dict }}</p>
-<p>{{ obj }}</p>
-<p>{{ set }}</p>
-<p>{{ menu|join:' | ' }}</p>
 
 
-<h1>{{ title }}</h1>
+
+
     
 </body>
 </html>
