@@ -6,9 +6,11 @@
     <title>{{ title|upper }}</title>
 </head>
 <body>
-{% for item in menu %}
+{% for item in posts %}
 <ul>
 <li >{{item}} 
+
+<p><a href="{% url 'post' item.id %}">Читать пост</a></p>
 {% if not forloop.last  %}
 <hr>
 {% endif %}

@@ -14,31 +14,17 @@ class MyClass:
 def index(request):
     # t = render_to_string('women/index.html')
     # return HttpResponse(t)
-    data = {
-        'title': 'главная ',
-          'menu': menu,
-          'float': 28.56,
-          'lst': [1, 2, 'abc', True],
-          'set': {1, 2, 3, 4, 5, 7},
-          'dict': {'key_1': 'value_1', 'key_2': 'value_2',},
-          'obj': MyClass(10,20),
-          }
-    return render(request, 'women/index.html', context=data)
+    posts = [{'id':1, 'name': 'sunday'},
+            {'id':2, 'name': 'friday'},
+            {'id':3, 'name': 'monday'}]
+    data = []
+    return render(request, 'women/index.html', context=posts)
 
 def about(request):
     return render(request, 'women/about.html', {'title': 'О сайте',})
 
-def categories(request, cat_id):
-    return HttpResponse(f'<h3> Категории </h3><p>id: {cat_id}</p>')
-
-def categories_by_slug(request, cat_slug):
-    return HttpResponse(f'<h2> Категории </h2><p>slug: {cat_slug}</p>')
-
-def archive(request, year):
-    if year > 2023:
-        uri = reverse('cats', args=('music', ))
-        return HttpResponseRedirect('/')
-    return HttpResponse(f'<h2> Архив по годам </h2><p>{year}</p>')
+def show_post(request, post_id):
+    return HttpResponse(f'Отображение статьи с id = {post_id}')
 
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
