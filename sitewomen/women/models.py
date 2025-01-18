@@ -22,6 +22,8 @@ class Women(models.Model):
     objects = models.Manager()
     published = PusblishedManager()
     cat = models.ForeignKey('Category', on_delete=models.PROTECT)
+    tags = models.ManyToManyField('TagPosts', blank=True, related_name='tags')
+
 
 
 
@@ -52,3 +54,11 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
+    
+
+class TagPosts(models.Model):
+    tag = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+
+    def __str__(self):
+        return self.tag
