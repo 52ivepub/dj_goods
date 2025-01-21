@@ -23,6 +23,7 @@ class Women(models.Model):
     published = PusblishedManager()
     cat = models.ForeignKey('Category', on_delete=models.PROTECT)
     tags = models.ManyToManyField('TagPosts', blank=True, related_name='tags')
+    husband = models.OneToOneField('Husband', on_delete=models.SET_NULL, null=True, blank=True, related_name='wuman')
 
 
 
@@ -65,3 +66,11 @@ class TagPosts(models.Model):
     
     def get_absolute_url(self):
         return reverse('tag', kwargs={'tag_slug': self.slug})
+    
+
+class Husband(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.name
