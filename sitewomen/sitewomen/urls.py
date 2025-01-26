@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from sitewomen import settings
 from women.views import page_not_found
 
 
@@ -26,6 +27,11 @@ urlpatterns = [
     path('', include('women.urls')),
 
 ]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
 
 
 handler404 = page_not_found
