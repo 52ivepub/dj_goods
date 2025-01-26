@@ -33,5 +33,7 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
 
+admin.site.site_header = 'Панель администрирования'
+admin.site.index_title = 'Известные женщины мира'
 
 handler404 = page_not_found
