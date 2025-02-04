@@ -1,3 +1,4 @@
+import re
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -61,7 +62,12 @@ def addpage(request):
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            try:
+                Women.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None, 'Ошибка добавленяи поста')
+            # print(form.cleaned_data)
     else:
         form = AddPostForm()
     data = {
