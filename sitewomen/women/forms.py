@@ -34,3 +34,7 @@ class AddPostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-input'}),
         }
         labels = {'slug': 'URL'}
+
+
+class UploadFileForm(forms.Form):
+    file = forms.ImageField(label="Файл")

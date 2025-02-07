@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
-from women.forms import AddPostForm
+from women.forms import AddPostForm, UploadFileForm
 
-from .models import Category, TagPosts, Women
+from .models import Category, TagPosts, UploadFiles, Women
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Добавить статью", 'url_name': 'addpage'},
@@ -43,7 +43,15 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'women/about.html', {'title': 'О сайте', 'menu': menu})
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            fp = UploadFiles(file=form.cleaned_data['file'])
+            fp.save()
+    else:
+        form = UploadFileForm()
+    return render(request, 'women/about.html',
+                  {'title': 'О сайте', 'menu': menu, 'form': form})
 
 
 def show_post(request, post_slug):
