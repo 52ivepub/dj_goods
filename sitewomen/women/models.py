@@ -1,5 +1,6 @@
 import re
 from tabnanny import verbose
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -27,15 +28,19 @@ class Women(models.Model):
         PUBLISHED = 1, 'Опубликовано'
 
     title = models.CharField(max_length=255, verbose_name='Заголовок')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True , verbose_name='Slug')
+    slug = models.SlugField(max_length=255, unique=True,
+                             db_index=True , verbose_name='Slug',
+                               validators=[ MinLengthValidator(5),
+                               MaxLengthValidator(100)]                           
+                             )
     content = models.TextField(blank=True, verbose_name='Текст статьи')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     time_update = models.DateTimeField(auto_now_add=True, verbose_name='Время изменения')
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)), default=Status.DRAFT, verbose_name='Статус')
 
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts')
-    tags = models.ManyToManyField('TagPosts', blank=True, related_name='tags')
-    husband = models.OneToOneField('Husband', on_delete=models.SET_NULL, null=True, blank=True, related_name='wuman')
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts', verbose_name='Категория')
+    tags = models.ManyToManyField('TagPosts', blank=True, related_name='tags', verbose_name='Тэги')
+    husband = models.OneToOneField('Husband', on_delete=models.SET_NULL, null=True, blank=True, related_name='wuman', verbose_name='муж')
     
     objects = models.Manager()
     published = PusblishedManager()
