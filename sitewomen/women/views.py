@@ -1,10 +1,11 @@
+
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 from django.views import View
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost, UploadFiles
@@ -69,17 +70,17 @@ def about(request):
                   {'title': 'О сайте', 'menu': menu, 'form': form})
 
 
-def show_post(request, post_slug):
-    post = get_object_or_404(Women, slug=post_slug)
+# def show_post(request, post_slug):
+#     post = get_object_or_404(Women, slug=post_slug)
 
-    data = {
-        'title': post.title,
-        'menu': menu,
-        'post': post,
-        'cat_selected': 1,
-    }
+#     data = {
+#         'title': post.title,
+#         'menu': menu,
+#         'post': post,
+#         'cat_selected': 1,
+#     }
 
-    return render(request, 'women/post.html', data)
+#     return render(request, 'women/post.html', data)
 
 
 # def addpage(request):
@@ -147,18 +148,18 @@ def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
 
 
-def show_tag_postlist(request, tag_slug):
-    tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related("cat")
+# def show_tag_postlist(request, tag_slug):
+#     tag = get_object_or_404(TagPost, slug=tag_slug)
+#     posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related("cat")
 
-    data = {
-        'title': f"Тег: {tag.tag}",
-        'menu': menu,
-        'posts': posts,
-        'cat_selected': None,
-    }
+#     data = {
+#         'title': f"Тег: {tag.tag}",
+#         'menu': menu,
+#         'posts': posts,
+#         'cat_selected': None,
+#     }
 
-    return render(request, 'women/index.html', context=data)
+#     return render(request, 'women/index.html', context=data)
 
 
 class AddPage(View):
@@ -183,3 +184,35 @@ class AddPage(View):
         }
         return render(request, 'women/addpage.html', data)
 
+
+class TagPostList(ListView):
+    template_name = 'women/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
+    
+    def get_context_data(self, *, object_kist=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = TagPost.objects.get(slug=self.kwargs['tag_slug'])
+        context['title'] = 'Тэг ' + tag.tag
+        context['menu'] = menu
+        context['cat_selected'] = None
+        return context
+
+    def get_queryset(self):
+        return Women.published.filter(tags__slug=self.kwargs['tag_slug']).select_related()
+
+
+class ShowPost(DetailView):
+    model = Women
+    template_name = 'women/post.html'
+    slug_url_kwarg  ='post_slug'
+    context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post'.title]
+        context['menu'] = menu
+        return context
+    
+    def get_object(self, queryset =None):
+        return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
