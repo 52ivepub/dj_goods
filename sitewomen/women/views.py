@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 from django.views import View
-from django.views.generic import DetailView, FormView, ListView, TemplateView
+from django.views.generic import DetailView, FormView, ListView, TemplateView, CreateView, UpdateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost, UploadFiles
@@ -161,21 +161,27 @@ def page_not_found(request, exception):
 
 #     return render(request, 'women/index.html', context=data)
 
-class AddPage(FormView):
+class AddPage(CreateView):
     form_class = AddPostForm
+    # model = Women
+    # fields = '__all__'
     template_name = 'women/addpage.html'
     success_url = reverse_lazy('home')
     extra_context = {
         'menu': menu,
         'title': 'Добавление статьи'
     }
-    
-    def form_vallid(self, form):
-        form.save()
-        return super().form_valid(form)
-            
 
 
+class UpdatePage(UpdateView):
+    model = Women
+    fields = '__all__'
+    template_name = 'women/addpage.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'menu': menu,
+        'title': 'Редактирование статьи'
+    }
 
 
 # class AddPage(View):
